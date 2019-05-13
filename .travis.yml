@@ -5,3 +5,10 @@ services:
 
 script:
   - npm install
+
+after_success:
+  - pip install --user awscli
+  - eval $(aws ecr get-login --region eu-west-1 --no-include-email)
+  - docker build -t test .
+  - docker tag test 432782038415.dkr.ecr.eu-west-1.amazonaws.com/test
+  - docker push 432782038415.dkr.ecr.eu-west-1.amazonaws.com/test
