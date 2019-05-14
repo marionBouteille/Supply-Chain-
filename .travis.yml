@@ -1,5 +1,8 @@
+
 language: node_js
 
+env:
+ - IMAGE_NAME=432782038415.dkr.ecr.eu-west-1.amazonaws.com/test
 services:
   - docker
 
@@ -7,10 +10,10 @@ script:
   - npm install
 
 after_success:
-  - pip install --user awscli
+  - pip install --user awscli 
   - eval $(aws ecr get-login --region eu-west-1 --no-include-email)
   - docker build -t test .
-  - docker tag test 432782038415.dkr.ecr.eu-west-1.amazonaws.com/test
-  - docker push 432782038415.dkr.ecr.eu-west-1.amazonaws.com/test
-  - aws cloudformation deploy --template-file ecs-task.yaml--stack-name exo4ISEN2 --region eu-west-1 --parameter-override ImageName=432782038415.dkr.ecr.eu-west-1.amazonaws.com/test
-  - aws cloudformation update-stack --stack-name exo4ISEN2 --region eu-west-1 --template-body file://ecs-task.yaml --parameters "ParameterKey=ImageName, ParameterValue=432782038415.dkr.ecr.eu-west-1.amazonaws.com/test"
+  - docker tag test$IMAGE_NAME
+  - docker push $IMAGE_NAME
+  - aws cloudformation deploy --template-file ./ecs-task.yaml --stack-name exo4ISEN2 --region eu-west-1 --parameter-override ImageName=$IMAGE_NAME
+  - aws cloudformation update-stack --template-body file://./ecs-task.yaml --stack-name exo4ISEN2 --region eu-west-1 --parameters "ParameterKey=ImageName,ParameterValue=$IMAGE_NAME"
