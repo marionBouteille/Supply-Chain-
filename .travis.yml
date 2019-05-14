@@ -13,7 +13,7 @@ after_success:
   - pip install --user awscli 
   - eval $(aws ecr get-login --region eu-west-1 --no-include-email)
   - docker build -t test .
-  - docker tag test$IMAGE_NAME
+  - docker tag test $IMAGE_NAME
   - docker push $IMAGE_NAME
   - aws cloudformation deploy --template-file ./ecs-task.yaml --stack-name exo4ISEN2 --region eu-west-1 --parameter-override ImageName=$IMAGE_NAME
   - aws cloudformation update-stack --template-body file://./ecs-task.yaml --stack-name exo4ISEN2 --region eu-west-1 --parameters "ParameterKey=ImageName,ParameterValue=$IMAGE_NAME"
