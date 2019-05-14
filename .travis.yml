@@ -12,4 +12,4 @@ after_success:
   - docker build -t test .
   - docker tag test 432782038415.dkr.ecr.eu-west-1.amazonaws.com/test
   - docker push 432782038415.dkr.ecr.eu-west-1.amazonaws.com/test
-  - aws cloudformation update-stack --stack-name exo4ISEN2 --template-body file://..\exercice_4\ecs-task.yaml --parameter ImageName=432782038415.dkr.ecr.eu-west-1.amazonaws.com/test
+  - aws cloudformation update-stack --stack-name exo4ISEN2 --template-body file://exercice_4\ecs-task.yaml --parameters "ParameterKey=ImageName, ParameterValue=432782038415.dkr.ecr.eu-west-1.amazonaws.com/test"
