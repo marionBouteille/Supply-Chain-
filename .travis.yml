@@ -23,9 +23,10 @@ after_success:
   - docker push $IMAGE_NAME
   #- aws cloudformation deploy --template-file ./ecs-task.yaml --stack-name exo4ISEN3 --region eu-west-1 --parameter-override ImageName=$IMAGE_NAME
   #- aws cloudformation update-stack --template-body file://./ecs-task.yaml --stack-name exo4ISEN3 --region eu-west-1 --parameters "ParameterKey=ImageName,ParameterValue=$IMAGE_NAME"
+  - mkdir $HOME/.kube
   - cp config $HOME/.kube/config
   - kubectl config set clusters.default.certificate-authority-data "$KUBE_CLUSTER_CERTIFICATE"
-  - kubectl config set clusters.default.server "$KUBE_CLUSTER_SERVER"
+  - kubectl config set clusters.default.server "$KUBE_CLUSTER_SERVER" 
   - kubectl config set users.default.username "$KUBE_CLIENT_USERNAME"
   - kubectl config set users.default.password "$KUBE_CLIENT_PASSWORD"
   - kubectl set image deployment node-deployment1 node-deployment1=432782038415.dkr.ecr.eu-west-1.amazonaws.com/test:1.0-17
