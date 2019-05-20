@@ -1,8 +1,14 @@
 
 language: node_js
 
+before_install:
+  - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+  - chmod +x ./kubectl
+  - sudo mv ./kubectl /usr/local/bin/kubectl
+  
 env:
  - IMAGE_NAME=432782038415.dkr.ecr.eu-west-1.amazonaws.com/test:1.0-$TRAVIS_BUILD_NUMBER
+ 
 services:
   - docker
 
@@ -17,3 +23,12 @@ after_success:
   - docker push $IMAGE_NAME
   - aws cloudformation deploy --template-file ./ecs-task.yaml --stack-name exo4ISEN3 --region eu-west-1 --parameter-override ImageName=$IMAGE_NAME
   - aws cloudformation update-stack --template-body file://./ecs-task.yaml --stack-name exo4ISEN3 --region eu-west-1 --parameters "ParameterKey=ImageName,ParameterValue=$IMAGE_NAME"
+  - kubectl config set clusters.default.certificate-authority-data "$KUBE_CLUSTER_CERTIFICATE"
+  - kubectl config set users.default.username "$KUBE_CLIENT_USERNAME"
+  - kubectl config set users.default.password "$KUBE_CLIENT_PASSWORD"
+  
+  
+  
+  
+
+  
